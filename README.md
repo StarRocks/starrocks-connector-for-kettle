@@ -38,7 +38,7 @@ StarRocks Kettle Connector实现了Kettle的一个插件，它用于在StarRocks
 
 最后生成Kettle应用压缩包：<源码目录>\assemblies\pdi-ce\target\pdi-ce-x.x.x.x-xxx.zip
 
-![img](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/2.jpg)
+![img](image/2.jpg)
 
 直接可以在[Kettle官网](https://www.hitachivantara.com/en-us/products/pentaho-platform/data-integration-analytics/pentaho-community-edition.html)下载，点击`Download Now`在下列菜单中即可找到`pdi-ce-x.x.x.x-xxx.zip`压缩包下载。
 
@@ -46,11 +46,11 @@ StarRocks Kettle Connector实现了Kettle的一个插件，它用于在StarRocks
 
 解压上一步得到的pdi-ce-x.x.x.x-xxx.zip压缩包，得到Kettle应用data-integration无需安装。data-integration文件包含如下启动文件：
 
-![img](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/3.jpg)
+![img](image/3.jpg)
 
 通过Spoon.bat(Windows)或Spoon.sh(Linux)启动Kettle图形界面，如下显示证明启动成功。
 
-![img](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/1.jpg)
+![img](image/1.jpg)
 
 ## 导入StarRocks Kettle Connector 插件
 
@@ -59,11 +59,11 @@ StarRocks Kettle Connector实现了Kettle的一个插件，它用于在StarRocks
 - 将插件包直接解压到当前文件夹，生成**StarRocks-Kettle-Connector**文件包。
 - 启动Spoon，**转换/批量**加载中即可看到**StarRocks Kettle Connector**插件。
 
-![img](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/6.jpg)
+![img](image/6.jpg)
 
 拖拽或者双击将StarRocks Kettle Connector插件生成新的step，之后再双击右侧新添加的StarRocks Kettle Connector插件step即可配置数据导入参数。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/9.jpg)
+![](image/9.jpg)
 
 ## 参数说明
 
@@ -162,7 +162,7 @@ DISTRIBUTED BY HASH(`id`);
 
 1. 填写文件信息，并将列分割符改成`,`与CSV文件中一样。当CSV文件中没有列头行时取消列头行的勾选。
 
-![img](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/5.jpg)
+![img](image/5.jpg)
 
 2. 获取字段信息
 
@@ -172,23 +172,23 @@ DISTRIBUTED BY HASH(`id`);
 >
 > 字段类型Kettle会自动识别，如果需要更改可直接下拉菜单更改类型。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/10.jpg)
+![](image/10.jpg)
 
 3. 数据预览
 
 当配置完信息后，可点击最后的**预览**按钮预览需要导入的数据。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/11.jpg)
+![](image/11.jpg)
 
 #### 向StarRocks中导入数据
 
 1. 添加StarRocks Kettle Connector插件，将**CSV文件输入**步骤输出的数据导入**StarRocks Kettle Connector**。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/13.jpg)
+![](image/13.jpg)
 
 2. 如下图所示配置StarRocks Kettle Connector插件参数。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/12.jpg)
+![](image/12.jpg)
 
 > **说明**
 >
@@ -198,13 +198,13 @@ DISTRIBUTED BY HASH(`id`);
 
 最下面表格中，**表字段**为目标StarRocks数据库表字段，**流字段**为上一步骤中传来的字段名称。若两者对应关系出现错误，需要更改**表字段**使其与流字段对应，不要改变流字段的顺序。可以直接在表字段名称上下拉菜单更改，也可点击右侧**编辑映射**。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/14.jpg)
+![](image/14.jpg)
 
 3. 点击开始按钮执行导入作业
 
 点击左上的开始按钮则开始转换，转换成功如下图所示。
 
-![img](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/7.jpg)
+![img](image/7.jpg)
 
 4. 查询导入结果
 
@@ -250,13 +250,13 @@ DISTRIBUTED BY HASH(`id`);
 
 1. 在Kettle中添加**JSON Input**插件，并配置信息。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/15.jpg)
+![](image/15.jpg)
 
 在**文件或路径**中添加`example2.json`文件路径，点击添加即可在选中的文件中看到**文件或路径**中填写的路径。
 
 在**字段**中选择`Select fields`，并选择要导入的字段信息。与**CSV**相同要根据具体的数据与StarRocks库中的数据类型相对应更改**类型字段**。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/16.jpg)
+![](image/16.jpg)
 
 
 
@@ -264,7 +264,7 @@ DISTRIBUTED BY HASH(`id`);
 
 1. 配置StarRocks参数
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/17.jpg)
+![](image/17.jpg)
 
 > 目前暂不支持列计算
 
@@ -347,7 +347,7 @@ StarRocks > select * from student;
 
 配置信息如下图所示，首先要勾选**是否支持更新和删除**并在`Upsert or Delete`选中UPSERT。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/18.jpg)
+![](image/18.jpg)
 
 4. 运行并查询数据
 
@@ -403,7 +403,7 @@ StarRocks > select * from student;
 
 通过导入，把 `example2.csv` 文件中 `id` 为 `2` 的数据从 `student` 表中删除。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/19.jpg)
+![](image/19.jpg)
 
 4. 查询数据
 
@@ -462,7 +462,7 @@ StarRocks > select * from student;
 
 需要勾选**部分导入**，其中**部分导入行**可填写也可为空。
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/20.jpg)
+![](image/20.jpg)
 
 4. 查询数据
 
@@ -553,7 +553,7 @@ DISTRIBUTED BY HASH(`id`);
 | account      | BigNumber |
 | ispass       | Boolean   |
 
-![](C:/Users/nzm/Desktop/开源之夏结项/starrocks-connector/image/21.jpg)
+![](image/21.jpg)
 
 4. 导入数据
 
