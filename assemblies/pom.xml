@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>StarRocks-Kettle-Connector</artifactId>
+        <groupId>org.pentaho.di.plugins</groupId>
+        <version>9.5.0.0-240</version>
+    </parent>
+
+    <artifactId>StarRocks-kettle-Connector-assemblies</artifactId>
+    <version>9.5.0.0-240</version>
+    <packaging>pom</packaging>
+
+    <name>PDI StarRocks Kettle Connector Assemblies</name>
+
+    <modules>
+        <module>plugin</module>
+    </modules>
+</project>
