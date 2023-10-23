@@ -4,7 +4,7 @@
     <formats>
         <format>zip</format>
     </formats>
-    <baseDirectory>StarRocks-Kettle-Connector</baseDirectory>
+    <baseDirectory>starrocks-kettle-connector</baseDirectory>
 
     <files>
         <file>
@@ -26,8 +26,8 @@
         <dependencySet>
             <outputDirectory>.</outputDirectory>
             <includes>
-                <include>org.pentaho.di.plugins:StarRocks-Kettle-Connector-impl:jar</include>
-                <include>org.pentaho.di.plugins:StarRocks-Kettle-Connector-ui:jar</include>
+                <include>com.starrocks:starrocks-kettle-connector-impl:jar</include>
+                <include>com.starrocks:starrocks-kettle-connector-ui:jar</include>
             </includes>
             <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>

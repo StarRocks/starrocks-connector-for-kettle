@@ -54,9 +54,9 @@ StarRocks Kettle Connector实现了Kettle的一个插件，它用于在StarRocks
 
 ## 导入StarRocks Kettle Connector 插件
 
-- 下载StarRocks Kettle Connector的插件源码，将其进行打包编译得到**assemblies/plugin/target/StarRocks-Kettle-Connector-plugin-x.x.x.x-xxx.zip**包。
+- 下载StarRocks Kettle Connector的插件源码，将其进行打包编译得到**assemblies/plugin/target/starrocks-kettle-connector-plugins-1.0-SNAPSHOT.zip**包。
 - 将**StarRocks-Kettle-Connector-plugin-x.x.x.x-xxx.zip**包放在**data-integration\plugins**文件目录下。
-- 将插件包直接解压到当前文件夹，生成**StarRocks-Kettle-Connector**文件包。
+- 将插件包直接解压到当前文件夹，生成**starrocks-kettle-connector**文件包。
 - 启动Spoon，**转换/批量**加载中即可看到**StarRocks Kettle Connector**插件。
 
 ![img](image/6.jpg)

@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>StarRocks-Kettle-Connector</artifactId>
-        <groupId>org.pentaho.di.plugins</groupId>
-        <version>9.5.0.0-240</version>
+        <groupId>com.starrocks</groupId>
+        <artifactId>starrocks-kettle-connector</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>StarRocks-Kettle-Connector-impl</artifactId>
+    <artifactId>starrocks-kettle-connector-impl</artifactId>
     <name>PDI StarRocks Kettle Connector Impl</name>
 
     <properties>

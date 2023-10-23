@@ -4,13 +4,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>StarRocks-Kettle-Connector</artifactId>
-        <groupId>org.pentaho.di.plugins</groupId>
-        <version>9.5.0.0-240</version>
+        <artifactId>starrocks-kettle-connector</artifactId>
+        <groupId>com.starrocks</groupId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>StarRocks-kettle-Connector-assemblies</artifactId>
-    <version>9.5.0.0-240</version>
+    <artifactId>starrocks-kettle-connector-assemblies</artifactId>
     <packaging>pom</packaging>
 
     <name>PDI StarRocks Kettle Connector Assemblies</name>

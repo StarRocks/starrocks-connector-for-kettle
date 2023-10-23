@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>StarRocks-kettle-Connector-assemblies</artifactId>
-        <groupId>org.pentaho.di.plugins</groupId>
-        <version>9.5.0.0-240</version>
+        <artifactId>starrocks-kettle-connector-assemblies</artifactId>
+        <groupId>com.starrocks</groupId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>StarRocks-Kettle-Connector-plugins</artifactId>
+    <artifactId>starrocks-kettle-connector-plugins</artifactId>
     <packaging>pom</packaging>
 
     <name>PDI StarRocks Kettle Connector Plugins Distribution</name>
@@ -17,14 +17,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.pentaho.di.plugins</groupId>
-            <artifactId>StarRocks-Kettle-Connector-impl</artifactId>
+            <groupId>com.starrocks</groupId>
+            <artifactId>starrocks-kettle-connector-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.pentaho.di.plugins</groupId>
-            <artifactId>StarRocks-Kettle-Connector-ui</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.starrocks</groupId>
+            <artifactId>starrocks-kettle-connector-ui</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
