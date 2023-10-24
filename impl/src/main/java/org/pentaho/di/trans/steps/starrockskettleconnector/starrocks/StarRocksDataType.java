@@ -27,7 +27,6 @@ public enum StarRocksDataType {
 
         for (StarRocksDataType starRocksDataType : starRocksDataTypes) {
             dataTypeMap.put(starRocksDataType.name(), starRocksDataType);
-            dataTypeMap.put(starRocksDataType.name().toLowerCase(), starRocksDataType);
         }
     }
 

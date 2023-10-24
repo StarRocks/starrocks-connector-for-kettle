@@ -1,6 +1,5 @@
 package org.pentaho.di.trans.steps.starrockskettleconnector;
 
-import com.alibaba.fastjson.JSON;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -136,7 +135,6 @@ public class StarRocksKettleConnectorTest {
         ValueMetaString vs = new ValueMetaString("string");
         rm.addValueMeta(vs);
         assertEquals("normalString", connector.typeConvertion(rm.getValueMeta(0), null, "normalString"));
-        assertEquals(JSON.parse("{\"test\":\"data\"}"), connector.typeConvertion(rm.getValueMeta(0), StarRocksDataType.JSON, "{\"test\":\"data\"}"));
 
         // Test for Boolean
         ValueMetaBoolean vb=new ValueMetaBoolean("boolean");

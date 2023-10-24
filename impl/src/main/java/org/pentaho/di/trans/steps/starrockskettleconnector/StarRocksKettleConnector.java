@@ -1,6 +1,5 @@
 package org.pentaho.di.trans.steps.starrockskettleconnector;
 
-import com.alibaba.fastjson.JSON;
 import com.starrocks.data.load.stream.StreamLoadDataFormat;
 import com.starrocks.data.load.stream.properties.StreamLoadProperties;
 import com.starrocks.data.load.stream.properties.StreamLoadTableProperties;
@@ -10,8 +9,18 @@ import org.pentaho.di.core.row.ValueMetaInterface;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
-import org.pentaho.di.trans.step.*;
-import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.*;
+import org.pentaho.di.trans.step.BaseStep;
+import org.pentaho.di.trans.step.StepDataInterface;
+import org.pentaho.di.trans.step.StepInterface;
+import org.pentaho.di.trans.step.StepMeta;
+import org.pentaho.di.trans.step.StepMetaInterface;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksCsvSerializer;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksDataType;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksISerializer;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksJdbcConnectionOptions;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksJdbcConnectionProvider;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksJsonSerializer;
+import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksQueryVisitor;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -125,23 +134,13 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
         try {
             switch (sourceMeta.getType()) {
                 case ValueMetaInterface.TYPE_STRING:
-                    // Treat as JSON if it starts with '{' or '['
                     String sValue;
                     if (sourceMeta.isStorageBinaryString()) {
                         sValue = new String((byte[]) r, StandardCharsets.UTF_8);
                     } else {
                         sValue = sourceMeta.getString(r);
                     }
-                    if (type == null) {
-                        return sValue;
-                    }
-                    if ((type == StarRocksDataType.JSON ||
-                            type == StarRocksDataType.UNKNOWN)
-                            && (sValue.charAt(0) == '{' || sValue.charAt(0) == '[')) {
-                        return JSON.parse(sValue);
-                    } else {
-                        return sValue;
-                    }
+                    return sValue;
                 case ValueMetaInterface.TYPE_BOOLEAN:
                     Boolean boolenaValue;
                     if (sourceMeta.isStorageBinaryString()) {

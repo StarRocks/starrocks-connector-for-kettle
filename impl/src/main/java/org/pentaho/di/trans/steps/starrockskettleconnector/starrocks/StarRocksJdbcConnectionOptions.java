@@ -1,22 +1,19 @@
 package org.pentaho.di.trans.steps.starrockskettleconnector.starrocks;
 
-import org.pentaho.di.core.exception.KettleException;
-
-import java.io.Serializable;
-import java.util.Optional;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class StarRocksJdbcConnectionOptions{
+public class StarRocksJdbcConnectionOptions {
 
-    protected final String url;
-    protected final String driverName;
-    protected final String cjDriverName;
+    private final String url;
+    private final String driverName;
+    private final String cjDriverName;
     @Nullable
-    protected final String username;
+    private final String username;
     @Nullable
-    protected final String password;
+    private final String password;
 
-    public StarRocksJdbcConnectionOptions(String url, String username, String password){
+    public StarRocksJdbcConnectionOptions(String url, String username, String password) {
         this.url = url;
         this.driverName = "com.mysql.jdbc.Driver";
         this.cjDriverName = "com.mysql.cj.jdbc.Driver";
