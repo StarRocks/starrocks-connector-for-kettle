@@ -26,11 +26,6 @@
             <classifier>jar-with-dependencies</classifier>
         </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.27</version>
-        </dependency>
         <!--log-->
         <dependency>
             <groupId>org.slf4j</groupId>
