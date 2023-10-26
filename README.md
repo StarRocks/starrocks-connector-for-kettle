@@ -55,6 +55,8 @@ StarRocks Kettle Connector实现了Kettle的一个插件，它用于在StarRocks
 ## 导入 starrocks-connector-for-kettle 插件
 
 - 下载starrocks-connector-for-kettle的插件源码，将其进行打包编译得到`assemblies/plugin/target/starrocks-kettle-connector-plugins-1.0-SNAPSHOT.zip`包。
+  - 编译时如开启测试则需要传入参数`mvn clean package -Dhttp_urls=<fe http> -Djdbc_urls=<fe jdbc> -Duser=<fe user> -Dpassword=<fe password>`，其中`<fe http>`和`<fe jdbc>`分别为`StarRocks`中节点的`http`地址和数据库地址如未添加参数则跳过测试。`-Duser=<fe user> -Dpassword=<fe password>`用户名和密码如不填写则设置为默认值`user=root`和`password=`。
+
 - 将`StarRocks-Kettle-Connector-plugin-x.x.x.x-xxx.zip`包放在`data-integration/plugins`文件目录下。
 - 将插件包直接解压到当前文件夹，生成`starrocks-kettle-connector`文件包。
 - `starrocks-connector-for-kettle`没有提供`MySQL`官方`JDBC`驱动程序`mysql-connector-java`，因为该驱动程序使用`GPL`许可证，存在一些限制。然而，`Kettle`连接器仍然需要 `MySQL JDBC` 驱动程序才能连接到 `StarRocks` 以获取表的元数据，因此您需要手动将驱动程序添加到解压后的文件夹`starrocks-kettle-connector/lib`中。您可以在 [MySQL 官网](https://dev.mysql.com/downloads/connector/j/) 或 [Maven 中央仓库](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)上找到这个驱动程序。

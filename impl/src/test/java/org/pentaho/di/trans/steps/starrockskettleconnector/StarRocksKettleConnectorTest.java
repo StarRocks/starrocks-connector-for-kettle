@@ -10,8 +10,14 @@ import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.plugins.PluginRegistry;
 import org.pentaho.di.core.plugins.StepPluginType;
 import org.pentaho.di.core.row.RowMeta;
-import org.pentaho.di.core.row.ValueMetaInterface;
-import org.pentaho.di.core.row.value.*;
+import org.pentaho.di.core.row.value.ValueMetaBigNumber;
+import org.pentaho.di.core.row.value.ValueMetaBoolean;
+import org.pentaho.di.core.row.value.ValueMetaDate;
+import org.pentaho.di.core.row.value.ValueMetaInteger;
+import org.pentaho.di.core.row.value.ValueMetaInternetAddress;
+import org.pentaho.di.core.row.value.ValueMetaNumber;
+import org.pentaho.di.core.row.value.ValueMetaString;
+import org.pentaho.di.core.row.value.ValueMetaTimestamp;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.junit.rules.RestorePDIEngineEnvironment;
 import org.pentaho.di.trans.Trans;
@@ -19,22 +25,27 @@ import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.steps.starrockskettleconnector.starrocks.StarRocksDataType;
 import org.pentaho.metastore.api.IMetaStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.math.BigDecimal;
-import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assume.assumeTrue;
 
 public class StarRocksKettleConnectorTest {
     @ClassRule
     public static RestorePDIEngineEnvironment env = new RestorePDIEngineEnvironment();
+    private static final Logger LOG = LoggerFactory.getLogger(StarRocksKettleConnectorTest.class);
 
     StarRocksKettleConnectorMeta lmeta;
     StarRocksKettleConnectorData ldata;
@@ -48,16 +59,25 @@ public class StarRocksKettleConnectorTest {
 
     @Before
     public void setUp() {
+        String HTTP_URLS = System.getProperty("http_urls");
+        String JDBC_URLS = System.getProperty("jdbc_urls");
+        assumeTrue(HTTP_URLS != null && JDBC_URLS != null);
+        LOG.info("The test parameters passed in:http_urls=" + HTTP_URLS + " jdbc_urls=" + JDBC_URLS);
+        String USER = System.getProperty("user");
+        String PASSWORD = System.getProperty("password");
+        if (USER != null) {
+            LOG.info("StarRocks login information:user=" + USER + " password=" + (PASSWORD == null ? "" : PASSWORD));
+        }
         TransMeta transMeta = new TransMeta();
         transMeta.setName("StarRocksKettleConnector");
 
         Map<String, String> vars = new HashMap<>();
-        vars.put("httpurl", "10.112.133.149:8030;10.112.143.215:8030;10.112.156.187:8030");
-        vars.put("jdbcurl", "jdbc:mysql://10.112.133.149:9030");
+        vars.put("httpurl", HTTP_URLS);
+        vars.put("jdbcurl", JDBC_URLS);
         vars.put("databasename", "somedatabase");
         vars.put("tablename", "sometable");
-        vars.put("user", "root");
-        vars.put("password", "");
+        vars.put("user", USER == null ? "root" : USER);
+        vars.put("password", PASSWORD == null ? "" : PASSWORD);
         vars.put("format", "CSV");
         transMeta.injectVariables(vars);
 
@@ -112,8 +132,8 @@ public class StarRocksKettleConnectorTest {
         assertEquals(lmeta.getTimeout(), newMeta.getTimeout());
         assertEquals(lmeta.getConnecttimeout(), newMeta.getConnecttimeout());
         assertEquals(lmeta.getMaxFilterRatio(), newMeta.getMaxFilterRatio(), 0.0001);
-        assertEquals(lmeta.getColumnSeparator(),newMeta.getColumnSeparator());
-        assertEquals(lmeta.getJsonpaths(),newMeta.getJsonpaths());
+        assertEquals(lmeta.getColumnSeparator(), newMeta.getColumnSeparator());
+        assertEquals(lmeta.getJsonpaths(), newMeta.getJsonpaths());
     }
 
     @Test
@@ -137,13 +157,13 @@ public class StarRocksKettleConnectorTest {
         assertEquals("normalString", connector.typeConvertion(rm.getValueMeta(0), null, "normalString"));
 
         // Test for Boolean
-        ValueMetaBoolean vb=new ValueMetaBoolean("boolean");
+        ValueMetaBoolean vb = new ValueMetaBoolean("boolean");
         rm.addValueMeta(vb);
         assertEquals(true, connector.typeConvertion(rm.getValueMeta(1), null, true));
         assertEquals(false, connector.typeConvertion(rm.getValueMeta(1), null, false));
 
         // Test for Integer
-        ValueMetaInteger vi=new ValueMetaInteger("integer");
+        ValueMetaInteger vi = new ValueMetaInteger("integer");
         rm.addValueMeta(vi);
         assertEquals((byte) 1, connector.typeConvertion(rm.getValueMeta(2), StarRocksDataType.TINYINT, 1L));
         assertEquals((short) 300, connector.typeConvertion(rm.getValueMeta(2), StarRocksDataType.SMALLINT, 300L));
@@ -161,22 +181,22 @@ public class StarRocksKettleConnectorTest {
         assertEquals(bigDecimal, connector.typeConvertion(rm.getValueMeta(4), null, bigDecimal));
 
         // Test for Date
-        ValueMetaDate vd=new ValueMetaDate("date");
+        ValueMetaDate vd = new ValueMetaDate("date");
         rm.addValueMeta(vd);
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormatter.parse("2022-08-05");
         assertEquals("2022-08-05", connector.typeConvertion(rm.getValueMeta(5), StarRocksDataType.DATE, date));
 
         // Test for Timestamp
-        ValueMetaTimestamp vt=new ValueMetaTimestamp("timestamp");
+        ValueMetaTimestamp vt = new ValueMetaTimestamp("timestamp");
         rm.addValueMeta(vt);
         SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateTime = datetimeFormat.parse("2022-08-05 12:34:56");
-        Timestamp timestamp=new Timestamp(dateTime.getTime());
+        Timestamp timestamp = new Timestamp(dateTime.getTime());
         assertEquals("2022-08-05 12:34:56", connector.typeConvertion(rm.getValueMeta(6), StarRocksDataType.DATETIME, timestamp));
 
         // Test for InetAddress
-        ValueMetaInternetAddress vint=new ValueMetaInternetAddress("inetaddress");
+        ValueMetaInternetAddress vint = new ValueMetaInternetAddress("inetaddress");
         rm.addValueMeta(vint);
         assertEquals("93.184.216.34", connector.typeConvertion(rm.getValueMeta(7), null, "93.184.216.34"));
     }
