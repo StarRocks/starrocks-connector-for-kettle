@@ -609,3 +609,7 @@ StarRocks > select * from detailDemo;
 - 实现Kettle自动创建StarRocks数据库表的功能。
 - 将项目交到真实用户进行测试，根据测试反馈完善项目。
 - 支持实现HLL和BITMAP类型的数据导入。
+
+## LICENSE
+
+The connector is under the [Apache License 2.0](https://github.com/nzm798/starrocks-connector-for-kettle/blob/main/LICENSE.txt).
