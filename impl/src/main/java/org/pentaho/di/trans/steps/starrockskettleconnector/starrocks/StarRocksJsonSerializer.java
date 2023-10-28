@@ -24,6 +24,7 @@ import java.util.Map;
 public class StarRocksJsonSerializer implements StarRocksISerializer {
     private static final Logger LOG = LoggerFactory.getLogger(StarRocksJsonSerializer.class);
     private final String[] fieldNames;
+    private ObjectMapper objectMapper=new ObjectMapper();
 
     public StarRocksJsonSerializer(String[] fieldNames) {
         this.fieldNames = fieldNames;
@@ -37,7 +38,6 @@ public class StarRocksJsonSerializer implements StarRocksISerializer {
             rowMap.put(fieldName, values[idx]);
             idx++;
         }
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = "";
         try {
             jsonString = objectMapper.writeValueAsString(rowMap);

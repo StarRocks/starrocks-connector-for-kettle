@@ -55,6 +55,8 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 public class StarRocksKettleConnectorTest {
     @ClassRule
@@ -161,7 +163,7 @@ public class StarRocksKettleConnectorTest {
     }
 
     @Test
-    public void testTypeConvertionForAllTypes() throws KettleException, Exception {
+    public void testTypeConversionForAllTypes() throws KettleException, Exception {
 
         StarRocksKettleConnector connector = lder;
         RowMeta rm = new RowMeta();
@@ -214,5 +216,4 @@ public class StarRocksKettleConnectorTest {
         rm.addValueMeta(vint);
         assertEquals("93.184.216.34", connector.typeConvertion(rm.getValueMeta(7), null, "93.184.216.34"));
     }
-
 }

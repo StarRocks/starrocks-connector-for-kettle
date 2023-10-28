@@ -25,6 +25,7 @@ public class StarRocksCsvSerializer implements StarRocksISerializer {
     private static final Logger LOG = LoggerFactory.getLogger(StarRocksCsvSerializer.class);
 
     private final String columnSeparator;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public StarRocksCsvSerializer(String sp) {
         this.columnSeparator = null == sp ? "\t" : sp;
@@ -33,7 +34,6 @@ public class StarRocksCsvSerializer implements StarRocksISerializer {
     @Override
     public String serialize(Object[] values) {
         StringBuilder sb = new StringBuilder();
-        ObjectMapper objectMapper = new ObjectMapper();
         String strval = "";
         int idx = 0;
         for (Object val : values) {
