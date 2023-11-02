@@ -169,38 +169,38 @@ public class StarRocksKettleConnectorTest {
         // Test for String
         ValueMetaString vs = new ValueMetaString("string");
         rm.addValueMeta(vs);
-        assertEquals("normalString", connector.typeConvertion(rm.getValueMeta(0), null, "normalString"));
+        assertEquals("normalString", connector.typeConversion(rm.getValueMeta(0), null, "normalString"));
 
         // Test for Boolean
         ValueMetaBoolean vb = new ValueMetaBoolean("boolean");
         rm.addValueMeta(vb);
-        assertEquals(true, connector.typeConvertion(rm.getValueMeta(1), null, true));
-        assertEquals(false, connector.typeConvertion(rm.getValueMeta(1), null, false));
+        assertEquals(true, connector.typeConversion(rm.getValueMeta(1), null, true));
+        assertEquals(false, connector.typeConversion(rm.getValueMeta(1), null, false));
 
         // Test for Integer
         ValueMetaInteger vi = new ValueMetaInteger("integer");
         rm.addValueMeta(vi);
-        assertEquals((byte) 1, connector.typeConvertion(rm.getValueMeta(2), StarRocksDataType.TINYINT, 1L));
-        assertEquals((short) 300, connector.typeConvertion(rm.getValueMeta(2), StarRocksDataType.SMALLINT, 300L));
-        assertEquals(50000, connector.typeConvertion(rm.getValueMeta(2), StarRocksDataType.INT, 50000L));
+        assertEquals((byte) 1, connector.typeConversion(rm.getValueMeta(2), StarRocksDataType.TINYINT, 1L));
+        assertEquals((short) 300, connector.typeConversion(rm.getValueMeta(2), StarRocksDataType.SMALLINT, 300L));
+        assertEquals(50000, connector.typeConversion(rm.getValueMeta(2), StarRocksDataType.INT, 50000L));
 
         // Test for Number
         ValueMetaNumber vn = new ValueMetaNumber("number");
         rm.addValueMeta(vn);
-        assertEquals(100140.123, connector.typeConvertion(rm.getValueMeta(3), null, 100140.123));
+        assertEquals(100140.123, connector.typeConversion(rm.getValueMeta(3), null, 100140.123));
 
         // Test for BigDecimal
         ValueMetaBigNumber vbg = new ValueMetaBigNumber("bignumber");
         rm.addValueMeta(vbg);
         BigDecimal bigDecimal = new BigDecimal("1000000.123");
-        assertEquals(bigDecimal, connector.typeConvertion(rm.getValueMeta(4), null, bigDecimal));
+        assertEquals(bigDecimal, connector.typeConversion(rm.getValueMeta(4), null, bigDecimal));
 
         // Test for Date
         ValueMetaDate vd = new ValueMetaDate("date");
         rm.addValueMeta(vd);
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormatter.parse("2022-08-05");
-        assertEquals("2022-08-05", connector.typeConvertion(rm.getValueMeta(5), StarRocksDataType.DATE, date));
+        assertEquals("2022-08-05", connector.typeConversion(rm.getValueMeta(5), StarRocksDataType.DATE, date));
 
         // Test for Timestamp
         ValueMetaTimestamp vt = new ValueMetaTimestamp("timestamp");
@@ -208,11 +208,11 @@ public class StarRocksKettleConnectorTest {
         SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateTime = datetimeFormat.parse("2022-08-05 12:34:56");
         Timestamp timestamp = new Timestamp(dateTime.getTime());
-        assertEquals("2022-08-05 12:34:56", connector.typeConvertion(rm.getValueMeta(6), StarRocksDataType.DATETIME, timestamp));
+        assertEquals("2022-08-05 12:34:56", connector.typeConversion(rm.getValueMeta(6), StarRocksDataType.DATETIME, timestamp));
 
         // Test for InetAddress
         ValueMetaInternetAddress vint = new ValueMetaInternetAddress("inetaddress");
         rm.addValueMeta(vint);
-        assertEquals("93.184.216.34", connector.typeConvertion(rm.getValueMeta(7), null, "93.184.216.34"));
+        assertEquals("93.184.216.34", connector.typeConversion(rm.getValueMeta(7), null, "93.184.216.34"));
     }
 }
