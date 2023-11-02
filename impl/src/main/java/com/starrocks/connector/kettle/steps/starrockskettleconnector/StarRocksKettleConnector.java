@@ -14,11 +14,13 @@
 
 package com.starrocks.connector.kettle.steps.starrockskettleconnector;
 
+import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksCsvSerializer;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksDataType;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksISerializer;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksJdbcConnectionOptions;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksJdbcConnectionProvider;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksJsonSerializer;
+import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksQueryVisitor;
 import com.starrocks.data.load.stream.StreamLoadDataFormat;
 import com.starrocks.data.load.stream.properties.StreamLoadProperties;
 import com.starrocks.data.load.stream.properties.StreamLoadTableProperties;
@@ -33,8 +35,6 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
-import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksCsvSerializer;
-import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksQueryVisitor;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +68,7 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
         data = (StarRocksKettleConnectorData) sdi;
 
         try {
-            
+
             Object[] r = getRow(); // Get row from input rowset & set row busy!
             if (r == null) { // no more input to be expected...
                 setOutputDone();
@@ -304,8 +304,8 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
                 jsonFileTable = new String[data.columns.length + 1];
                 System.arraycopy(data.columns, 0, jsonFileTable, 0, data.columns.length);
                 jsonFileTable[data.columns.length] = "__op";
-            }else {
-                jsonFileTable=meta.getFieldTable();
+            } else {
+                jsonFileTable = meta.getFieldTable();
             }
             serializer = new StarRocksJsonSerializer(jsonFileTable);
         } else {

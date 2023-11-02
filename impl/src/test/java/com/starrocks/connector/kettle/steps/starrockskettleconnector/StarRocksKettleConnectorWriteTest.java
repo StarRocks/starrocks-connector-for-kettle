@@ -40,7 +40,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 
 
 public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTest {
@@ -58,7 +57,7 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
         KettleEnvironment.init();
     }
 
-    private String createStarRocksTable() throws Exception {
+    public static String createStarRocksTable() throws Exception {
         String tableName = getTableName();
         String createStarRocksTable =
                 String.format(
@@ -252,5 +251,4 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
         String dbSource = selectTheTable();
         assertEquals("nullnullnull", dbSource);
     }
-
 }
