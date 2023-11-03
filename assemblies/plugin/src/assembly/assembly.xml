@@ -26,6 +26,11 @@ limitations under the License.
             <outputDirectory>.</outputDirectory>
             <filtered>true</filtered>
         </file>
+        <file>
+            <source>${project.basedir}/src/main/resources/log4j.properties</source>
+            <outputDirectory>.</outputDirectory>
+            <filtered>true</filtered>
+        </file>
     </files>
 
     <fileSets>

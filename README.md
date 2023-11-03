@@ -585,7 +585,9 @@ StarRocks > select * from detailDemo;
 
 ### 错误日志
 
-当导入数据出现错误时，`Kettle`控制台中只会输出错误信息，若想查看详细的日志记录可在`data-integration\logs\pdi.log`中查看。其中包括`Kettle`的运行信息和`StarRocks`的`Stream Load`相关的`DEBUGE`信息。
+当导入数据出现错误时，`Kettle`控制台中只会输出错误信息，若想查看详细的日志记录可在`data-integration\logs\pdi.log`中查看。其中包括`Kettle`的运行信息和`StarRocks`的`Stream Load`相关的日志信息，其中日志信息默认为`DEBUGE`级别。
+
+若要更改日志级别需要先关闭`Kettle`，在解压得到的`data-integration/plugins/starrocks-kettle-connector`文件包中可以看到`log4j`的配置文件`log4j.properties`，更改配置文件到希望的日志级别，最后重启`Kettle`即可。
 
 # Limitation
 

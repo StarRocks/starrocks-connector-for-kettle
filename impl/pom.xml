@@ -173,11 +173,32 @@ limitations under the License.
                     <excludes>
                         <exclude>**/resources/**</exclude>
                         <exclude>**/target/**</exclude>
-                        <exclude>logs/**</exclude>
+                        <exclude>**/logs/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
-        </plugins>
-    </build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
 
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>log4j.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
 </project>
