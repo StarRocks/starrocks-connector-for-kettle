@@ -14,11 +14,13 @@
 
 package com.starrocks.connector.kettle.steps.starrockskettleconnector;
 
+import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksCsvSerializer;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksDataType;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksISerializer;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksJdbcConnectionOptions;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksJdbcConnectionProvider;
 import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksJsonSerializer;
+import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksQueryVisitor;
 import com.starrocks.data.load.stream.StreamLoadDataFormat;
 import com.starrocks.data.load.stream.properties.StreamLoadProperties;
 import com.starrocks.data.load.stream.properties.StreamLoadTableProperties;
@@ -33,8 +35,6 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
-import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksCsvSerializer;
-import com.starrocks.connector.kettle.steps.starrockskettleconnector.starrocks.StarRocksQueryVisitor;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +68,7 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
         data = (StarRocksKettleConnectorData) sdi;
 
         try {
-            
+
             Object[] r = getRow(); // Get row from input rowset & set row busy!
             if (r == null) { // no more input to be expected...
                 setOutputDone();
@@ -125,7 +125,7 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
         for (int i = 0; i < data.keynrs.length; i++) {
             ValueMetaInterface sourceMeta = getInputRowMeta().getValueMeta(data.keynrs[i]);
             StarRocksDataType dataType = data.fieldtype.get(meta.getFieldTable()[i]);
-            values[i] = typeConvertion(sourceMeta, dataType, r[i]);
+            values[i] = typeConversion(sourceMeta, dataType, r[i]);
         }
         if (supportUpsertDelete && meta.getUpsertOrDelete() != null && meta.getUpsertOrDelete().length() != 0) {
             values[data.keynrs.length] = StarRocksOP.parse(meta.getUpsertOrDelete()).ordinal();
@@ -141,7 +141,7 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
      * @param r
      * @return
      */
-    public Object typeConvertion(ValueMetaInterface sourceMeta, StarRocksDataType type, Object r) throws KettleException {
+    public Object typeConversion(ValueMetaInterface sourceMeta, StarRocksDataType type, Object r) throws KettleException {
         if (r == null) {
             return null;
         }
@@ -299,7 +299,15 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
         if (meta.getFormat().equals("CSV")) {
             serializer = new StarRocksCsvSerializer(meta.getColumnSeparator());
         } else if (meta.getFormat().equals("JSON")) {
-            serializer = new StarRocksJsonSerializer(meta.getFieldTable());
+            String[] jsonFileTable;
+            if (meta.getEnableUpsertDelete() && meta.getUpsertOrDelete() != null && meta.getUpsertOrDelete().length() != 0) {
+                jsonFileTable = new String[data.columns.length + 1];
+                System.arraycopy(data.columns, 0, jsonFileTable, 0, data.columns.length);
+                jsonFileTable[data.columns.length] = "__op";
+            } else {
+                jsonFileTable = meta.getFieldTable();
+            }
+            serializer = new StarRocksJsonSerializer(jsonFileTable);
         } else {
             logError(BaseMessages.getString(PKG, "StarRocksKettleConnector.Message.FailFormat"));
             return null;
@@ -326,7 +334,7 @@ public class StarRocksKettleConnector extends BaseStep implements StepInterface 
         // Add the '__op' field
         if (data.columns != null) {
             // don't need to add "columns" header in following cases
-            // 1. use csv format but the flink and starrocks schemas are aligned
+            // 1. use csv format but the kettle and starrocks schemas are aligned
             // 2. use json format, except that it's loading o a primary key table for StarRocks 1.x
             boolean noNeedAddColumnsHeader;
             if (dataFormat instanceof StreamLoadDataFormat.CSVFormat) {

@@ -142,6 +142,7 @@ limitations under the License.
                         <exclude>.github/**</exclude>
                         <exclude>**/resources/**</exclude>
                         <exclude>target/**</exclude>
+                        <exclude>**/logs/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

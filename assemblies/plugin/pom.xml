@@ -56,7 +56,7 @@ limitations under the License.
                         <configuration>
                             <outputDirectory>${project.build.directory}/assembly/lib</outputDirectory>
                             <includeScope>compile</includeScope>
-                            <excludeArtifactIds>StarRocks-Kettle-Connector-impl,StarRocks-Kettle-Connector-ui
+                            <excludeArtifactIds>starrocks-kettle-connector-impl,starrocks-kettle-connector-ui
                             </excludeArtifactIds>
                         </configuration>
                     </execution>

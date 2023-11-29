@@ -40,7 +40,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 
 
 public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTest {
@@ -58,7 +57,7 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
         KettleEnvironment.init();
     }
 
-    private String createStarRocksTable() throws Exception {
+    public static String createStarRocksTable() throws Exception {
         String tableName = getTableName();
         String createStarRocksTable =
                 String.format(
@@ -67,7 +66,7 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
                                 "name STRING," +
                                 "score INT" +
                                 ") ENGINE = OLAP " +
-                                "DUPLICATE KEY(id) " +
+                                "PRIMARY KEY(id) " +
                                 "DISTRIBUTED BY HASH (id) BUCKETS 8 " +
                                 "PROPERTIES (" +
                                 "\"replication_num\" = \"1\"" +
@@ -77,6 +76,11 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
         return tableName;
     }
 
+    /**
+     * Test SCV load and Upsert.
+     *
+     * @throws Exception
+     */
     @Test
     public void testKettleWriteStarRocks() throws Exception {
         TransMeta transMeta = new TransMeta();
@@ -107,7 +111,8 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
         lmeta.setTimeout(600);
         lmeta.setMaxFilterRatio(0);
         lmeta.setColumnSeparator("\t");
-
+        lmeta.setEnableupsertdelete(true);
+        lmeta.setUpsertOrDelete("UPSERT");
         lmeta.setFieldStream(new String[]{"id", "name", "score"});
         lmeta.setFieldTable(new String[]{"id", "name", "score"});
 
@@ -131,6 +136,8 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
 
         createStarRocksTable();
         lder.init(lmeta, ldata);
+
+        // test csv load
         long a = 1;
         String b = "test";
         long c = 2;
@@ -147,6 +154,101 @@ public class StarRocksKettleConnectorWriteTest extends StarRocksConnectorBaseTes
         String dbSource = selectTheTable();
         String testSource = String.format("%d%s%d", a, b, c);
         assertEquals(testSource, dbSource);
+
+        // test upsert
+        lder.init(lmeta, ldata);
+        c = 3;
+        r = new Object[]{(Object) a, (Object) b, (Object) c};
+        doReturn(r).when(lder).getRow();
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                lder.dispose(lmeta, ldata);
+                return null;
+            }
+        }).when(lder).putRow(any(), any());
+        lder.processRow(lmeta, ldata);
+        dbSource = selectTheTable();
+        testSource = String.format("%d%s%d", a, b, c);
+        assertEquals(dbSource, testSource);
+
     }
 
+    /**
+     * Test the JSON load and Delete.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testKettleWriteJSONStarRocks() throws Exception {
+        TransMeta transMeta = new TransMeta();
+        transMeta.setName("StarRocksKettleConnector");
+
+        Map<String, String> vars = new HashMap<>();
+        vars.put("httpurl", getHttpUrls());
+        vars.put("jdbcurl", getJdbcUrl());
+        vars.put("databasename", getDbName());
+        vars.put("tablename", getTableName());
+        vars.put("user", getUSER());
+        vars.put("password", getPASSWORD());
+        vars.put("format", "JSON");
+        transMeta.injectVariables(vars);
+
+        lmeta = new StarRocksKettleConnectorMeta();
+        List<String> httpurl = Arrays.asList(vars.get("httpurl").split(";"));
+        lmeta.setHttpurl(httpurl);
+        lmeta.setJdbcurl(transMeta.environmentSubstitute("${jdbcurl}"));
+        lmeta.setDatabasename(transMeta.environmentSubstitute("${databasename}"));
+        lmeta.setTablename(transMeta.environmentSubstitute("${tablename}"));
+        lmeta.setUser(transMeta.environmentSubstitute("${user}"));
+        lmeta.setPassword(transMeta.environmentSubstitute("${password}"));
+        lmeta.setFormat(transMeta.environmentSubstitute("${format}"));
+        lmeta.setMaxbytes(6);
+        lmeta.setScanningFrequency(50L);
+        lmeta.setConnecttimeout(1000);
+        lmeta.setTimeout(600);
+        lmeta.setMaxFilterRatio(0);
+        lmeta.setColumnSeparator("\t");
+        lmeta.setEnableupsertdelete(true);
+        lmeta.setUpsertOrDelete("DELETE");
+        lmeta.setFieldStream(new String[]{"id", "name", "score"});
+        lmeta.setFieldTable(new String[]{"id", "name", "score"});
+
+
+        ldata = new StarRocksKettleConnectorData();
+        PluginRegistry plugReg = PluginRegistry.getInstance();
+        String skcPid = plugReg.getPluginId(StepPluginType.class, lmeta);
+        smeta = new StepMeta(skcPid, "StarRocksKettleConnector", lmeta);
+        Trans trans = new Trans(transMeta);
+        transMeta.addStep(smeta);
+        lder = Mockito.spy(new StarRocksKettleConnector(smeta, ldata, 1, transMeta, trans));
+        ValueMetaInteger vi = new ValueMetaInteger("id");
+        ValueMetaString vs = new ValueMetaString("name");
+        ValueMetaInteger vn = new ValueMetaInteger("score");
+        rm.addValueMeta(vi);
+        rm.addValueMeta(vs);
+        rm.addValueMeta(vn);
+
+        lder.setInputRowMeta(rm);
+        lder.copyVariablesFrom(transMeta);
+
+        lder.init(lmeta, ldata);
+
+        // test JSON load
+        long a = 1;
+        String b = "test";
+        long c = 3;
+        Object[] r = new Object[]{(Object) a, (Object) b, (Object) c};
+        doReturn(r).when(lder).getRow();
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                lder.dispose(lmeta, ldata);
+                return null;
+            }
+        }).when(lder).putRow(any(), any());
+        lder.processRow(lmeta, ldata);
+        String dbSource = selectTheTable();
+        assertEquals("nullnullnull", dbSource);
+    }
 }
